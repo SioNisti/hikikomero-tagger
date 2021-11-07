@@ -27,13 +27,18 @@ namespace testiä
         {
             InitializeComponent();
 
+            //GlobalHotKey.RegisterHotKey("CTRL + Right", () => nextimage());//seuraava kuva
+            //GlobalHotKey.RegisterHotKey("CTRL + Left", () => previmage());//edellinen kuva
             GlobalHotKey.RegisterHotKey("CTRL + N", () => nextimage()); //seuraava kuva
-            GlobalHotKey.RegisterHotKey("CTRL + Right", () => nextimage());//seuraava kuva
             GlobalHotKey.RegisterHotKey("CTRL + B", () => previmage());//edellinen kuva
-            GlobalHotKey.RegisterHotKey("CTRL + Left", () => previmage());//edellinen kuva
-            GlobalHotKey.RegisterHotKey("CTRL + T", () => fcsTagSearch());//laittaa focusin siihen tägihaku lootaan
+            GlobalHotKey.RegisterHotKey("CTRL + S", () => fcsTagSearch());//laittaa focusin siihen tägihaku lootaan
+            GlobalHotKey.RegisterHotKey("CTRL + T", () => fcsTagAdd());//laittaa focusin siihen tägihaku lootaan
             GlobalHotKey.RegisterHotKey("CTRL + D", () => Kakapylytoimi());//valitse kansio
             GlobalHotKey.RegisterHotKey("CTRL + R", () => refresh());//valitsee saman kansion uudestaan ns "päivittääkkseen" tiedosto listan
+            GlobalHotKey.RegisterHotKey("CTRL + DELETE", () => DelImg());//poistaa valitun kuvan
+            GlobalHotKey.RegisterHotKey("CTRL + Q", () => QuickArtist());//ottaa tiedostonimestä kaiken ennen ensimmäistä "-" ja laittaa kuvan Artist:ksi
+            GlobalHotKey.RegisterHotKey("CTRL + Y", () => fcsArtistAdd());//Focusaa artist boksiin
+            GlobalHotKey.RegisterHotKey("CTRL + H", () => fcsHop());//Focusaa image hopperiin
 
         }
         public PictureBox ThePicture
@@ -46,28 +51,18 @@ namespace testiä
         public static string valittukuva2;
 
         public static int intti = 0;
-        int curtab = 0;
-        int rowcount = 5;
 
         public static bool showpngs = false;
-        //Timer _timeri = new Timer();
-        //static System.Windows.Forms.Timer _timeri = new System.Windows.Forms.Timer();
 
         private void imageMTDT_Load(object sender, EventArgs e)
         {
-            prevbtn.Enabled = false;
-            nxtbtn.Enabled = false;
             TagSearch.Enabled = false;
             currentimage.Enabled = false;
-            tab_ap.Enabled = false;
-            tab_camera.Enabled = false;
-            tab_description.Enabled = false;
-            tab_origin.Enabled = false;
-            diatimeSel.Enabled = false;
+            textBox1.Enabled = false;
+            textBox2.Enabled = false;
         }
         public void Unohdakuva()
         {
-            //tää koodin pätkä ottaa sen käytössä olevan kuvan pois pictureboxista jotta sen voi tiedoston päälle voi tallentaa
             var bit = new Bitmap(this.Width, this.Height);
             var g = Graphics.FromImage(bit);
 
@@ -77,26 +72,12 @@ namespace testiä
 
             g.Dispose();
         }
-        private void Button1_Click(object sender, EventArgs e)
-        {
-                //edellinen kuva
-                previmage();
-                Debug.WriteLine(intti);
-        }
-
-        private void Button2_Click(object sender, EventArgs e)
-        {
-                // seuraava kuva
-                nextimage();
-                Debug.WriteLine(intti);
-        }
         public void nextimage()
         {
             if (valittukansio2 == null)
             {
                 if (!MessageBoxer.IsOpen)
                 {
-                    //MessageBox.Show("No images found", "No images", 0, MessageBoxIcon.Error);
                     MessageBoxer.Show("No images found", "No images", MessageBoxIcon.Error);
 
                     return;
@@ -106,20 +87,15 @@ namespace testiä
                     return;
                 }
             }
-
-            // seuraava kuva
             Unohdakuva();
 
             intti++;
-
-            //FileBox.Items[0].Selected = true; en täysin oo varma mikä tän virka on.  saattanee olla vanhan koodin jäännös
 
             if (intti == FileBox.Items.Count + 1)
             {
                 intti = 1;
             }
 
-            //imageamount.Value = FileBox.Items.Count;
             imageAmount2.Text = "/ "+FileBox.Items.Count.ToString();
             currentimage.Value = intti;
 
@@ -130,11 +106,10 @@ namespace testiä
             }
             gsImages();
             Debug.WriteLine(intti);
-            prevbtn.Enabled = true;
-            nxtbtn.Enabled = true;
             TagSearch.Enabled = true;
-            diatimeSel.Enabled = true;
             currentimage.Enabled = true;
+            textBox1.Enabled = true;
+            textBox2.Enabled = true;
         }
         public void previmage()
         {
@@ -142,7 +117,6 @@ namespace testiä
             {
                 if (!MessageBoxer.IsOpen)
                 {
-                    //MessageBox.Show("No images found", "No images", 0, MessageBoxIcon.Error);
                     MessageBoxer.Show("No images found", "No images", MessageBoxIcon.Error);
 
                     return;
@@ -152,14 +126,10 @@ namespace testiä
                     return;
                 }
             }
-            //edellinen kuva
             Unohdakuva();
             intti--;
 
-            //FileBox.Items[0].Selected = true; en täysin oo varma mikä tän virka on.  saattanee olla vanhan koodin jäännös
-
             imageAmount2.Text = "/ " + FileBox.Items.Count.ToString();
-            //imageamount.Value = FileBox.Items.Count;
             currentimage.Value = intti;
 
             if (intti < 1)
@@ -178,102 +148,10 @@ namespace testiä
 
             gsImages();
             Debug.WriteLine(intti);
-            prevbtn.Enabled = true;
-            nxtbtn.Enabled = true;
             TagSearch.Enabled = true;
-            diatimeSel.Enabled = true;
             currentimage.Enabled = true;
-        }
-
-        public void Metat()
-        {
-            //tää siis ottaa valitusta kuvasta kaikki löytyvät metadatat ja asettaa ne siihen listview:iin
-
-            //saatanan vittumainen bugi ton datagridview:in kanssa
-            //se paska kaatuu jos oot muokkaamassa jotain solua ja klikkaat toiseen soluun
-
-            //descriptionMTDT.CurrentCell = null;voi perkele
-            descriptionMTDT.ClearSelection();
-            descriptionMTDT.Rows.Clear();
-
-            var file = ImageFile.FromFile(valittukuva);
-
-            /*foreach (var property in file.Properties)
-            {
-                Debug.WriteLine(property.Name + " - " + property.Value);
-            }*/
-
-            if(!tab_ap.Enabled)
-            {
-                tab_ap.Enabled = true;
-                tab_camera.Enabled = true;
-                tab_description.Enabled = true;
-                tab_origin.Enabled = true;
-            }
-
-            if (curtab == 0)
-            {
-                tab_description.BackColor = Color.White;
-                tab_origin.BackColor = Color.Gray;
-                tab_camera.BackColor = Color.Gray;
-                tab_ap.BackColor = Color.Gray;
-
-                descriptionMTDT.Rows.Add("Title", file.Properties.Get(ExifTag.WindowsTitle), 140091);
-                descriptionMTDT.Rows.Add("Subject", file.Properties.Get(ExifTag.WindowsSubject), 140095);
-                descriptionMTDT.Rows.Add("Rating", file.Properties.Get(ExifTag.Rating), 118246);
-                descriptionMTDT.Rows.Add("Tags", file.Properties.Get(ExifTag.WindowsKeywords), 140094);
-                descriptionMTDT.Rows.Add("Comments", file.Properties.Get(ExifTag.WindowsComment), 140092);
-                rowcount = 5;
-            }
-            if (curtab == 1)
-            {
-                tab_description.BackColor = Color.Gray;
-                tab_origin.BackColor = Color.White;
-                tab_camera.BackColor = Color.Gray;
-                tab_ap.BackColor = Color.Gray;
-
-                descriptionMTDT.Rows.Add("Authors", file.Properties.Get(ExifTag.WindowsAuthor), 140093);
-                descriptionMTDT.Rows.Add("Date taken", file.Properties.Get(ExifTag.DateTimeOriginal), 236867);
-                //descriptionMTDT.Rows.Add("Date acquired", file.Properties.Get(ExifTag.SubSecTime), 237520); exiflib:issä ei ole "date acquired" juttua???
-                descriptionMTDT.Rows.Add("Copyright", file.Properties.Get(ExifTag.Copyright), 133432);
-                rowcount = 3;
-            }
-            if (curtab == 2)
-            {
-                tab_description.BackColor = Color.Gray;
-                tab_origin.BackColor = Color.Gray;
-                tab_camera.BackColor = Color.White;
-                tab_ap.BackColor = Color.Gray;
-
-                descriptionMTDT.Rows.Add("Camera maker", file.Properties.Get(ExifTag.Make), 100271);
-                descriptionMTDT.Rows.Add("Camera model", file.Properties.Get(ExifTag.Model), 100272);
-                descriptionMTDT.Rows.Add("ISO speed", file.Properties.Get(ExifTag.ISOSpeedRatings), 234855);
-                descriptionMTDT.Rows.Add("Metering Mode", file.Properties.Get(ExifTag.MeteringMode), 237383);
-                descriptionMTDT.Rows.Add("Flash mode", file.Properties.Get(ExifTag.Flash), 237385);
-                descriptionMTDT.Rows.Add("35mm focal lenght", file.Properties.Get(ExifTag.FocalLengthIn35mmFilm), 241989);
-                rowcount = 6;
-            }
-            if (curtab == 3)
-            {
-                tab_description.BackColor = Color.Gray;
-                tab_origin.BackColor = Color.Gray;
-                tab_camera.BackColor = Color.Gray;
-                tab_ap.BackColor = Color.White;
-
-                descriptionMTDT.Rows.Add("Lens maker", file.Properties.Get(ExifTag.LensMake), 242035);
-                descriptionMTDT.Rows.Add("Lens model", file.Properties.Get(ExifTag.LensModel), 242036); //tää on eri mitä w käyttää
-                descriptionMTDT.Rows.Add("Flash maker", file.Properties.Get(ExifTag.FlashEnergy), 241483); //tää on eri mitä w käyttää
-                descriptionMTDT.Rows.Add("Flash model", file.Properties.Get(ExifTag.FlashpixVersion), 240960); //tää on eri mitä w käyttää
-                descriptionMTDT.Rows.Add("Camera serial number", file.Properties.Get(ExifTag.BodySerialNumber), 242033); //tää on eri mitä w käyttää
-                descriptionMTDT.Rows.Add("Contrast", file.Properties.Get(ExifTag.Contrast), 241992);
-                descriptionMTDT.Rows.Add("Light source", file.Properties.Get(ExifTag.LightSource), 237384);
-                descriptionMTDT.Rows.Add("Exposure program", file.Properties.Get(ExifTag.ExposureProgram), 234850);
-                descriptionMTDT.Rows.Add("Saturation", file.Properties.Get(ExifTag.Saturation), 241993);
-                descriptionMTDT.Rows.Add("Sharpness", file.Properties.Get(ExifTag.Sharpness), 241994);
-                descriptionMTDT.Rows.Add("White balance", file.Properties.Get(ExifTag.WhiteBalance), 241987);
-                descriptionMTDT.Rows.Add("EXIF version", file.Properties.Get(ExifTag.ExifVersion), 236864);
-                rowcount = 12;
-            }
+            textBox1.Enabled = true;
+            textBox2.Enabled = true;
         }
 
         private void ToolStripButton1_Click_1(object sender, EventArgs e)
@@ -284,7 +162,6 @@ namespace testiä
         public void Kakapylytoimi()
         {
             CommonOpenFileDialog dialog = new CommonOpenFileDialog();
-            //dialog.InitialDirectory = "C:\\Users"; tällä sais valittua alotus kansion mutta jos se ei ole määritelty niin se alottaa siitä mihin jäit
             dialog.IsFolderPicker = true;
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
@@ -300,7 +177,7 @@ namespace testiä
                     string fileName = Path.GetFileName(file);
                     ListViewItem item = new ListViewItem(fileName);
 
-                    if (file.Contains(".jpg") || file.Contains(".png") && showpngs/* || file.Contains(".png")*/)
+                    if (file.Contains(".jpg") || file.Contains(".png") && showpngs)
                     {
                         item.Tag = file;
 
@@ -311,21 +188,18 @@ namespace testiä
             }
             if (FileBox.Items.Count == 0)
             {
-                //MessageBox.Show("No JPG images were found in the path \"" + valittukansio2 + "\"", "No JPGs", 0, MessageBoxIcon.Information);
                 MessageBoxer.Show("No JPG images were found in the path \"" + valittukansio2 + "\"", "No JPGs", MessageBoxIcon.Information);
             }
             else
             {
                 intti = 0;
-                //imageamount.Value = FileBox.Items.Count;
                 imageAmount2.Text = "/ " + FileBox.Items.Count.ToString();
                 currentimage.Value = intti;
 
-                prevbtn.Enabled = true;
-                nxtbtn.Enabled = true;
                 TagSearch.Enabled = true;
-                diatimeSel.Enabled = true;
                 currentimage.Enabled = true;
+                textBox1.Enabled = false;
+                textBox2.Enabled = false;
             }
         }
         public void refresh()
@@ -341,35 +215,31 @@ namespace testiä
                     string fileName = Path.GetFileName(file);
                     ListViewItem item = new ListViewItem(fileName);
 
-                    if (file.Contains(".jpg") || file.Contains(".png") && showpngs/* || file.Contains(".png")*/)
+                    if (file.Contains(".jpg") || file.Contains(".png") && showpngs)
                     {
                         item.Tag = file;
 
                         FileBox.Items.Add(item);
                     }
                 }
-            if (FileBox.Items.Count == 0)
-            {
-                //MessageBox.Show("No JPG images were found in the path \"" + valittukansio2 + "\"", "No JPGs", 0, MessageBoxIcon.Information);
-                MessageBoxer.Show("No JPG images were found in the path \"" + valittukansio2 + "\"", "No JPGs", MessageBoxIcon.Information);
-            }
-            else
-            {
-                intti = 0;
-                //imageamount.Value = FileBox.Items.Count;
-                imageAmount2.Text = "/ " + FileBox.Items.Count.ToString();
-                currentimage.Value = intti;
-
-                prevbtn.Enabled = true;
-                nxtbtn.Enabled = true;
-                TagSearch.Enabled = true;
-                currentimage.Enabled = true;
-                diatimeSel.Enabled = true;
+                if (FileBox.Items.Count == 0)
+                {
+                    MessageBoxer.Show("No JPG images were found in the path \"" + valittukansio2 + "\"", "No JPGs", MessageBoxIcon.Information);
+                }
+                else
+                {
+                    intti = 0;
+                    imageAmount2.Text = "/ " + FileBox.Items.Count.ToString();
+                    currentimage.Value = intti;
+                    TagSearch.Enabled = false;
+                    currentimage.Enabled = false;
+                    textBox1.Enabled = false;
+                    textBox2.Enabled = false;
+                    label1.Text = "Tags: ";
                 }
             }
             else
             {
-                //MessageBox.Show("Cannot refresh.  No folder selected.", "Cannot refresh", 0, MessageBoxIcon.Error);
                 MessageBoxer.Show("Cannot refresh.  No folder selected.", "Cannot refresh", MessageBoxIcon.Error);
             }
         }
@@ -381,14 +251,11 @@ namespace testiä
                 intti = Convert.ToInt32(currentimage.Value);
                 if (Convert.ToInt32(currentimage.Value) < 0)
                 {
-                    //MessageBox.Show("Value must be positive", "Negative value", 0, MessageBoxIcon.Error);
                     MessageBoxer.Show("Value must be positive", "Negative value", MessageBoxIcon.Error);
                     currentimage.Value = intti;
                 }
-                //else if (Convert.ToInt32(currentimage.Value) > Convert.ToInt32(imageamount.Value))
                 else if (currentimage.Value > Convert.ToInt32(imageAmount2.Text.Remove(0, 1)))
                 {
-                    //MessageBox.Show("Value must be lower than the count of found images", "Value too high", 0, MessageBoxIcon.Error);
                     MessageBoxer.Show("Value must be lower than the count of found images", "Value too high", MessageBoxIcon.Error);
                     currentimage.Value = intti;
                 }
@@ -407,10 +274,7 @@ namespace testiä
         }
         public void searchwithtag(string text)
         {
-            //nyt pitäis jotenkin saada jokaikinen tägi tonne alempaan if lauseeseen että se kattoo onko tiedoston metadatasa nää tägit (text)
             FileBox.Items.Clear();
-
-            //en tiä miksi fixedtext string:in pois ottaminen ja kaikki missä sitä käytettiin vaihtaminen text string:iin toimii
             if (text == "")
             {
                 string[] files = Directory.GetFiles(valittukansio2);
@@ -456,7 +320,6 @@ namespace testiä
                 }
                 intti = 1;
                 imageAmount2.Text = "/ " + FileBox.Items.Count.ToString();
-                //imageamount.Value = FileBox.Items.Count;
             }
             else if (text != "notag" && text != "")
             {
@@ -483,21 +346,13 @@ namespace testiä
                 int sloop = 0;
                 var b = 1;
 
-                //MessageBox.Show("vittu haloo\n"+b);
                 while (b == 1)
                 {
-                    //MessageBox.Show($"tagsi{1}" + $"tagsi{1}");
-                    //ota kaikki kuvat jotka sisältää tägin1 ja lisää listalle.  kun kaikki kuvat on lisätty mene listan kuvat läpi katsoen onko niissä tägi2,3,4,5,6 jne ja poista listalta jos ei ole???
-                    //vittu kun aivot sulああああああああああああ
-                    //käy kuvat läpi yksikerrallaan,  jos kuva sisältää tägin yksi kokeile sisältääkö se tägin 1,2,3,4 jne jos joo, lisää listalle, jos ei niin ohita ja mene seuraavaan kuvaan <- jos toimii niin ehkä nopeampi
-
                     string[] files = Directory.GetFiles(valittukansio2);
                     int fcount = files.Length;
-                    //MessageBox.Show("mitä vittua");
 
                     if (sloop >= fcount - 1)
                     {
-                        //MessageBox.Show("No images were found with the tags \"" + text + "\"", "No found images", 0, MessageBoxIcon.Error);
                         MessageBoxer.Show("No images were found with the tags \"" + text + "\"", "No found images", MessageBoxIcon.Error);
                         b--;
                         break;
@@ -506,14 +361,13 @@ namespace testiä
                     {
                         foreach (string file in files)
                         {
-                            //MessageBox.Show("vittu pääseekö se mihinkään");
                             string fileName = Path.GetFileName(file);
                             ListViewItem item = new ListViewItem(fileName);
 
                             if (file.EndsWith(".jpg"))
                             {
                                 var gottenTags = ImageFile.FromFile(file).Properties.Get(ExifTag.WindowsKeywords);
-                                if (gottenTags != null && gottenTags.ToString() != "") //huh saatana piti lisätä toi toinen ehto tohon koska muuten jos jollain oli täginä "" niin se paska kaatu
+                                if (gottenTags != null && gottenTags.ToString() != "")
                                 {
                                     string gottenTags2 = gottenTags.ToString();
                                     char gt2 = gottenTags2[0];
@@ -522,13 +376,6 @@ namespace testiä
                                     {
                                         gottenTags2 = ";" + gottenTags2;
                                     }
-                                    //tää saatanan paska koodin pätkä toimmii mutta se ärsyttää iha vitusteen koska tämä on mahollisesti pirun hidas jos kuvia on vähänkään enemmän
-                                    //tää vitun paska lyhyt perkele kattoo joka kuvasta joka valitun tägin sen sijasta että se lopettaisi edes yrittämisen jos yksikään tägi ei löydy
-                                    //perkele kun käytin joku 10 vitullista tuntia tonne alempaan pois kommentoituun kohtaan koska se periaate oli hyvä mutta en vaan saanut toimimaan
-                                    //enemmällä kuin kahdella tägillä vittu perkele saatana kirosana jumalauta >>>>>>>>>>::::::::(((((((((((((((
-                                    //tl:dr vituttaa paska koodi
-
-                                    // JOOOOOOO Just parasta jeebou juuh eliikkääs "break;" tonne else:n sisälle korjas ongelman :DDD olo vitun tyhmä
                                     tloop = 0;
 
                                     foreach (var tagÅ in Xtags2)
@@ -544,7 +391,7 @@ namespace testiä
                                                 FileBox.Items.Add(item);
                                                 Debug.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
                                             }
-                                            b--;//tää estää sen ettei se jää loputtomaan looppiin jumihin
+                                            b--;
                                         }
                                         else
                                         {
@@ -571,15 +418,10 @@ namespace testiä
                                 }
                             }
                             intti = 1;
-                            //imageamount.Value = FileBox.Items.Count;
                             imageAmount2.Text = "/ " + FileBox.Items.Count.ToString();
                         }
                     }
-                }/*
-                if (FileBox.Items.Count == 0)
-                {
-                    MessageBox.Show("No images were found with the tags \"" + text + "\"", "No found images", 0, MessageBoxIcon.Error);
-                }*/
+                }
             }
 
         }
@@ -598,256 +440,26 @@ namespace testiä
             valittukuva2 = item.SubItems[0].Text;
 
             CurrentFile.Text = valittukuva2;
-            Metat();
+            label4.Text = valittukuva2;
             ThePicture.Image = Image.FromFile(@valittukuva);
-        }
+            var file = ImageFile.FromFile(valittukuva);
 
-        private void descriptionMTDT_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            //MessageBox.Show(intti.ToString() + " - (" + intti.ToString() + " * " + "2) = " + (intti - (intti * 2)).ToString());
-                
-            if (valittukuva2.EndsWith(".png"))
+            if (file.Properties.Get(ExifTag.WindowsKeywords) != null)
             {
-                MessageBoxer.Show("Cannot edit PNG metadata.", "PNG image", MessageBoxIcon.Exclamation);
-                return;
+                label1.Text = "Tags: " + file.Properties.Get(ExifTag.WindowsKeywords).ToString();
+            } else
+            {
+                label1.Text = "Tags: ";
             }
-                descriptionMTDT.ClearSelection();
-                System.Threading.Thread.Sleep(300);
-                updatemtdt(e.RowIndex);
-                descriptionMTDT.Update();
-                descriptionMTDT.Refresh();
-        }
-        public void updatemtdt(int x)
-        {
-            /*string vittu = descriptionMTDT.CurrentCell.RowIndex.ToString();
-            string perkele = descriptionMTDT.Rows[descriptionMTDT.CurrentCell.RowIndex].Cells[1].Value.ToString();
-            MessageBox.Show(vittu+"\n\n"+perkele);*/
-
-            //int x = 0;
-            ThePicture.Refresh();
-            string celldata;
-            int exiftype = 0;
-
-            exiftype = Int32.Parse(descriptionMTDT.Rows[x].Cells[2].Value.ToString());
-            Debug.WriteLine(x);
-
-            Unohdakuva();
-
-            ImageFile file;
-            file = ImageFile.FromFile(valittukuva);
-            int rowcount2 = rowcount;
-            while (rowcount2 > 0)
-            {
-                Debug.WriteLine("mittarilla voit testata");
-                rowcount2--;
-                Debug.WriteLine(x);
-                if (descriptionMTDT.Rows[x].Cells[1].Value == null)
-                {
-                    celldata = "";
-                    Debug.WriteLine("kivesneste"); //mikä helvetin mieliala pitää olla jotta laittaa debug viestiksi "kivesneste"????
-                }
-                else
-                {
-                    celldata = descriptionMTDT.Rows[x].Cells[1].Value.ToString();
-                }
-
-                Debug.WriteLine(celldata);
-
-                exiftype = Int32.Parse(descriptionMTDT.Rows[x].Cells[2].Value.ToString());
-               
-                Debug.WriteLine("KIISSELI");
-
-                int kokki = 0;
-                kokki = Int32.Parse(descriptionMTDT.Rows[x].Cells[2].Value.ToString());
-
-                if (kokki != exiftype)
-                { break; }
-                //{
-                    file.Properties.Set((ExifTag)exiftype, celldata); 
-                    //-------kaatuu ylemmälle riville quickdataa käyttäessä "specified cast is not valid". tuo "exiftype" variable lienee jotenkin rikki qd:ta käyttäessä-------
-                    //sinänsä saattais toimia jos mä ottaisin sen qd:hen laitetun jutun tonne gridview:iin ja ottaisin sen uudestaan sieltä
-                    Debug.WriteLine("\n" + exiftype + " / " + celldata + "\nMEISSELI");
-
-                    if ((int)exiftype == 236867)
-                    {
-                        if (celldata == null || celldata == "")
-                        {
-                            file.Properties.Set((ExifTag)exiftype, "");
-                        }
-                        else
-                        {
-                            file.Properties.Set((ExifTag)exiftype, DateTime.ParseExact(celldata, "yyyy.MM.dd HH.mm.ss", System.Globalization.CultureInfo.InvariantCulture));
-                        }
-                    }
-
-                    // x = x;  huom tän virka on olla ns "breakpoint":ina kun tuo vittuilee nytten
-                    //tää on aika paskaa koodia mutta jotenkin on tarkistettava ollaanko muuttamassa tota datetimeoriginal höskää koska se celldata pitää muuttaa datetimeksi
-
-                    //-IF- SWITCH LAUSE SOTKUA KOSKA PERKELEEN ENUM:IT
-                    //tää toimii mutta ei ole käyttäjäystävällinen koska pitää tietää tismalleen miten tuo exiflib tahtoo nuo tiedot. properties > data "flash" voi olla esim 'flash' meinaten että se oli päällä
-                    //mutta jos haluaa sen laittaa tolla ohjelmalla niin pitää kirjoittaa 'FlashFired' ja kyllä tismalleen noin isot kirjaimet ja ei välejä ja kaiken kukkuraksi tää on hirveä if lause soppa
-                    //saattais toimia jos mä laita ton gridview:in päälle parit dropdown höskät jotka menee näkyviin tarvittaessa ja piiloon muutoin ja riippúen curtab:istä niin se laittaisi tietyt tiedot niihin dropdown:eihin
-
-                    switch (exiftype)
-                    {
-                        case 237383: //MeteringMode
-                            switch (celldata)
-                            {
-                                case null:
-                                case "":
-                                    //doesn't save anything because the cell is null or otherwise blank
-                                    break;
-
-                                default:
-                                    file.Properties.Set((ExifTag)exiftype, Enum.Parse(typeof(MeteringMode), celldata));
-                                    break;
-                            }
-                            break;
-
-                        case 237385: //Flash
-                            switch (celldata)
-                            {
-                                case null:
-                                case "":
-                                    //doesn't save anything because the cell is null or otherwise blank
-                                    break;
-
-                                default:
-                                    file.Properties.Set((ExifTag)exiftype, Enum.Parse(typeof(Flash), celldata));
-                                    break;
-                            }
-                            break;
-
-                        case 241992: //Contrast
-                            switch (celldata)
-                            {
-                                case null:
-                                case "":
-                                    //doesn't save anything because the cell is null or otherwise blank
-                                    break;
-
-                                default:
-                                    file.Properties.Set((ExifTag)exiftype, Enum.Parse(typeof(Contrast), celldata));
-                                    break;
-                            }
-                            break;
-
-                        case 237384: //LigtSource
-                            switch (celldata)
-                            {
-                                case null:
-                                case "":
-                                    //doesn't save anything because the cell is null or otherwise blank
-                                    break;
-
-                                default:
-                                    file.Properties.Set((ExifTag)exiftype, Enum.Parse(typeof(LightSource), celldata));
-                                    break;
-                            }
-                            break;
-
-                        case 234850: //ExposureProgram
-                            switch (celldata)
-                            {
-                                case null:
-                                case "":
-                                    //doesn't save anything because the cell is null or otherwise blank
-                                    break;
-
-                                default:
-                                    file.Properties.Set((ExifTag)exiftype, Enum.Parse(typeof(ExposureProgram), celldata));
-                                    break;
-                            }
-                            break;
-
-                        case 241993: //Saturation
-                            switch (celldata)
-                            {
-                                case null:
-                                case "":
-                                    //doesn't save anything because the cell is null or otherwise blank
-                                    break;
-
-                                default:
-                                    file.Properties.Set((ExifTag)exiftype, Enum.Parse(typeof(Saturation), celldata));
-                                    break;
-                            }
-                            break;
-
-                        case 241994: //Sharpness
-                            switch (celldata)
-                            {
-                                case null:
-                                case "":
-                                    //doesn't save anything because the cell is null or otherwise blank
-                                    break;
-
-                                default:
-                                    file.Properties.Set((ExifTag)exiftype, Enum.Parse(typeof(Sharpness), celldata));
-                                    break;
-                            }
-                            break;
-
-                        case 241987: //WhiteBalance
-                            switch (celldata)
-                            {
-                                case null:
-                                case "":
-                                    //doesn't save anything because the cell is null or otherwise blank
-                                    break;
-
-                                default:
-                                    file.Properties.Set((ExifTag)exiftype, Enum.Parse(typeof(WhiteBalance), celldata));
-                                    break;
-                            }
-                            break;
-                    }
-                //}
-                //x++; tää rikko sen.  oli jääny yli vanhasta koodista
+            if (file.Properties.Get(ExifTag.Artist) != null) { 
+                label2.Text = "Artist: " + file.Properties.Get(ExifTag.Artist).ToString();
             }
-
-            Unohdakuva();
-            file.Save(valittukansio2 + "/" + valittukuva2);
-            /*
-            try
+            else
             {
-                nextimage();
+                label2.Text = "Artist: ";
             }
-            catch (System.ArgumentOutOfRangeException)
-            {
-                MessageBoxer.Show("splat2: " + intti, "vittu", MessageBoxIcon.Error);
-            }*/
-            ThePicture.Image = Image.FromFile(@valittukuva);
-            Metat();
-            //quickdataX();
-            Debug.WriteLine("------------------------------------------------------------------");
-        }
-        private void descriptionMTDT_CellLeave(object sender, DataGridViewCellEventArgs e)
-        {
-            
-        }
-        private void tab_description_Click(object sender, EventArgs e)
-        {
-            curtab = 0;
-            Metat();
-        }
-
-        private void tab_origin_Click(object sender, EventArgs e)
-        {
-            curtab = 1;
-            Metat();
-        }
-
-        private void tab_camera_Click(object sender, EventArgs e)
-        {
-            curtab = 2;
-            Metat();
-        }
-
-        private void tab_ap_Click(object sender, EventArgs e)
-        {
-            curtab = 3;
-            Metat();
+            System.Drawing.Image img = System.Drawing.Image.FromFile(valittukuva);
+            label3.Text = img.Width+ "x" + img.Height;
         }
         private void start_DragEnter(object sender, DragEventArgs e)
         {
@@ -875,7 +487,7 @@ namespace testiä
                 string fileName = Path.GetFileName(file);
                 ListViewItem item = new ListViewItem(fileName);
 
-                if (file.Contains(".jpg") || file.Contains(".png") && showpngs/* || file.Contains(".png")*/)
+                if (file.Contains(".jpg") || file.Contains(".png") && showpngs)
                 {
                     item.Tag = file;
 
@@ -884,21 +496,18 @@ namespace testiä
             }
             if (FileBox.Items.Count == 0)
             {
-                //MessageBox.Show("No JPG images were found in the path \"" + valittukansio2 + "\"", "No JPGs", 0, MessageBoxIcon.Information);
                 MessageBoxer.Show("No JPG images were found in the path \"" + valittukansio2 + "\"", "No JPGs", MessageBoxIcon.Information);
             }
             else
             {
                 intti = 0;
-                //imageamount.Value = FileBox.Items.Count;
                 imageAmount2.Text = "/ " + FileBox.Items.Count.ToString();
                 currentimage.Value = intti;
 
-                prevbtn.Enabled = true;
-                nxtbtn.Enabled = true;
                 TagSearch.Enabled = true;
                 currentimage.Enabled = true;
-                diatimeSel.Enabled = true;
+                textBox1.Enabled = true;
+                textBox2.Enabled = true;
             }
         }
 
@@ -918,6 +527,50 @@ namespace testiä
             if (TagSearch.Text == "Search images with tags")
                 TagSearch.Text = "";
         }
+        public void DelImg()
+        {
+            DialogResult dialogResult = MessageBox.Show("Are you sure you want to delete this image?\n" + valittukuva, "Delete image?", MessageBoxButtons.YesNo, MessageBoxIcon.Warning); ;
+            if (dialogResult == DialogResult.Yes)
+            {
+                Unohdakuva();
+                File.Delete(valittukansio2 + "/" + valittukuva2);
+                refresh();
+            }
+            else if (dialogResult == DialogResult.No)
+            {
+                return;
+            }
+        }
+        public void QuickArtist()
+        {
+            var file = ImageFile.FromFile(valittukuva);
+            string[] kahvi = valittukuva2.Split('-');
+            var artist = kahvi[0];
+            Unohdakuva();
+            file.Properties.Set(ExifTag.Artist, artist);
+            file.Save(valittukansio2 + "/" + valittukuva2);
+
+            ThePicture.Image = Image.FromFile(@valittukuva);
+            if (file.Properties.Get(ExifTag.WindowsKeywords) != null)
+                label1.Text = "Tags: " + file.Properties.Get(ExifTag.WindowsKeywords).ToString();
+
+            if (file.Properties.Get(ExifTag.Artist) != null)
+                label2.Text = "Artist: " + file.Properties.Get(ExifTag.Artist).ToString();
+            gsImages();
+
+        }
+        public void fcsTagAdd()
+        {
+            textBox1.Focus();
+        }
+        public void fcsArtistAdd()
+        {
+            textBox2.Focus();
+        }
+        public void fcsHop()
+        {
+            currentimage.Focus();
+        }
 
         private void FileBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
@@ -928,23 +581,20 @@ namespace testiä
                 Debug.WriteLine(row+"\n"+ FileBox.SelectedItems[0] + "\n" +i);
                 if (i == FileBox.SelectedItems[0])
                 {
-                    //MessageBox.Show("File: "+FileBox.SelectedItems[0].Text+"\nFound on row: "+row);
                     Debug.WriteLine(row+" joo");
                     Unohdakuva();
                     intti = row;
 
-                    //imageamount.Value = FileBox.Items.Count;
                     imageAmount2.Text = "/ " + FileBox.Items.Count.ToString();
                     currentimage.Value = intti;
 
                     gsImages();
 
-                    prevbtn.Enabled = true;
-                    nxtbtn.Enabled = true;
                     TagSearch.Enabled = true;
                     currentimage.Enabled = true;
-                    diatimeSel.Enabled = true;
-                    break; //pomppaa pois foreach loopista kun kuva on löydetty.  estää turhan työn
+                    textBox1.Enabled = true;
+                    textBox2.Enabled = true;
+                    break;
                 }
                 row++;
             }
@@ -968,48 +618,94 @@ namespace testiä
                     refresh();
             }
         }
-        //Timer _timeri = new Timer();
-        private void diatimeSel_KeyPress(object sender, KeyPressEventArgs e)
+
+        private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar != (char)Keys.Enter)
+            if (e.KeyChar == (char)Keys.Enter)
             {
-                return;
-            }
-            if (diatimeSel.Value < 1)
-            {
-                timer1.Enabled = false;
-                timer1.Dispose();
-                return;
-            }
+                Unohdakuva();
+                string tags = textBox1.Text;
 
-            timer1.Interval = (int)diatimeSel.Value;
-            if (!timer1.Enabled)
-            {
-                timer1.Enabled = false;
-                timer1.Dispose();
-                timer1.Enabled = true;
-            }
-            else
-            {
-                timer1.Enabled = false;
-                timer1.Dispose();
-                return;
-            }
+                if (tags == null)
+                {
+                    return;
+                }
 
-            //timer1.Tick += changedia;
+                var file = ImageFile.FromFile(valittukuva);
+                if (!tags.StartsWith("-"))
+                {
+                    Unohdakuva();
+                    if (tags.StartsWith(";"))
+                    {
+                        tags = tags.Remove(0,1);
+                    }
+                    if (!tags.EndsWith(";"))
+                    {
+                        tags = tags + ";";
+                    }
+                    if (file.Properties.Get(ExifTag.WindowsKeywords) != null)
+                    {
+                        tags = file.Properties.Get(ExifTag.WindowsKeywords).ToString() + tags;
+                    }
+                } else
+                {
+                    Unohdakuva();
+                    tags = tags.Remove(0, 1);
+                    tags = tags+";";
+                    var oldtags = file.Properties.Get(ExifTag.WindowsKeywords).ToString();
+                    tags = oldtags.Replace(tags, "");
+                }
+
+                Unohdakuva();
+                file.Properties.Set(ExifTag.WindowsKeywords, tags);
+
+                try
+                {
+                    Unohdakuva();
+                    file.Save(valittukansio2 + "/" + valittukuva2);
+                }
+                catch (System.UnauthorizedAccessException)
+                {
+                    MessageBoxer.Show("Couldn't save image. \"Can't access file\"\nmake sure the folder/image isn't marked as \"hidden\"", "Error", MessageBoxIcon.Error);
+                }
+
+                ThePicture.Image = Image.FromFile(@valittukuva);
+                if (file.Properties.Get(ExifTag.WindowsKeywords) != null)
+                    label1.Text = "Tags: " + file.Properties.Get(ExifTag.WindowsKeywords).ToString();
+                    gsImages();
+            }
         }
-        public void changedia(Object myObject, EventArgs myEventArgs)
+
+        private void textBox2_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if(FileBox.Items.Count > 0)
+            if (e.KeyChar == (char)Keys.Enter)
             {
-                nextimage();
+                Unohdakuva();
+                if (textBox2.Text == null)
+                {
+                    return;
+                }
+
+                var file = ImageFile.FromFile(valittukuva);
+
+                Unohdakuva();
+                file.Properties.Set(ExifTag.Artist, textBox2.Text);
+
+                try
+                {
+                    Unohdakuva();
+                    file.Save(valittukansio2 + "/" + valittukuva2);
+                }
+                catch (System.UnauthorizedAccessException)
+                {
+                    MessageBoxer.Show("Couldn't save image. \"Can't access file\"\nmake sure the folder/image isn't marked as \"hidden\"", "Error", MessageBoxIcon.Error);
+                }
+
+                ThePicture.Image = Image.FromFile(@valittukuva);
+                if (file.Properties.Get(ExifTag.Artist) != null)
+                    label2.Text = "Artist: " + file.Properties.Get(ExifTag.Artist).ToString();
+                gsImages();
             }
-            else { return; }
-        }
-
-        private void PictureBox_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

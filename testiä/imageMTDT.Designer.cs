@@ -29,10 +29,7 @@ namespace testiä
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(imageMTDT));
-            this.prevbtn = new System.Windows.Forms.Button();
-            this.nxtbtn = new System.Windows.Forms.Button();
             this.PictureBox = new System.Windows.Forms.PictureBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.DirectoryBtn = new System.Windows.Forms.ToolStripButton();
@@ -45,39 +42,18 @@ namespace testiä
             this.CurrentFile = new System.Windows.Forms.TextBox();
             this.currentimage = new System.Windows.Forms.NumericUpDown();
             this.TagSearch = new System.Windows.Forms.TextBox();
-            this.descriptionMTDT = new System.Windows.Forms.DataGridView();
-            this.mtdtName = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.mtdtData = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.exif = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tab_description = new System.Windows.Forms.Button();
-            this.tab_origin = new System.Windows.Forms.Button();
-            this.tab_camera = new System.Windows.Forms.Button();
-            this.tab_ap = new System.Windows.Forms.Button();
             this.refreshbtn = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
-            this.diatimeSel = new System.Windows.Forms.NumericUpDown();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.imageAmount2 = new System.Windows.Forms.Label();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.PictureBox)).BeginInit();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.currentimage)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.descriptionMTDT)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.diatimeSel)).BeginInit();
             this.SuspendLayout();
-            // 
-            // prevbtn
-            // 
-            resources.ApplyResources(this.prevbtn, "prevbtn");
-            this.prevbtn.Name = "prevbtn";
-            this.prevbtn.UseVisualStyleBackColor = true;
-            this.prevbtn.Click += new System.EventHandler(this.Button1_Click);
-            // 
-            // nxtbtn
-            // 
-            resources.ApplyResources(this.nxtbtn, "nxtbtn");
-            this.nxtbtn.Name = "nxtbtn";
-            this.nxtbtn.UseVisualStyleBackColor = true;
-            this.nxtbtn.Click += new System.EventHandler(this.Button2_Click);
             // 
             // PictureBox
             // 
@@ -85,7 +61,6 @@ namespace testiä
             resources.ApplyResources(this.PictureBox, "PictureBox");
             this.PictureBox.Name = "PictureBox";
             this.PictureBox.TabStop = false;
-            this.PictureBox.Click += new System.EventHandler(this.PictureBox_Click);
             // 
             // toolStrip1
             // 
@@ -171,74 +146,6 @@ namespace testiä
             this.TagSearch.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TagSearch_MouseClick);
             this.TagSearch.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TagSearch_KeyPress);
             // 
-            // descriptionMTDT
-            // 
-            this.descriptionMTDT.AllowUserToAddRows = false;
-            this.descriptionMTDT.AllowUserToDeleteRows = false;
-            this.descriptionMTDT.BackgroundColor = System.Drawing.Color.White;
-            this.descriptionMTDT.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.descriptionMTDT.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
-            this.descriptionMTDT.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.mtdtName,
-            this.mtdtData,
-            this.exif});
-            this.descriptionMTDT.GridColor = System.Drawing.SystemColors.ActiveCaptionText;
-            resources.ApplyResources(this.descriptionMTDT, "descriptionMTDT");
-            this.descriptionMTDT.Name = "descriptionMTDT";
-            this.descriptionMTDT.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.descriptionMTDT_CellEndEdit);
-            this.descriptionMTDT.CellLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.descriptionMTDT_CellLeave);
-            // 
-            // mtdtName
-            // 
-            this.mtdtName.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            resources.ApplyResources(this.mtdtName, "mtdtName");
-            this.mtdtName.Name = "mtdtName";
-            this.mtdtName.ReadOnly = true;
-            this.mtdtName.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // mtdtData
-            // 
-            this.mtdtData.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            resources.ApplyResources(this.mtdtData, "mtdtData");
-            this.mtdtData.Name = "mtdtData";
-            this.mtdtData.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            // 
-            // exif
-            // 
-            resources.ApplyResources(this.exif, "exif");
-            this.exif.Name = "exif";
-            this.exif.ReadOnly = true;
-            // 
-            // tab_description
-            // 
-            this.tab_description.BackColor = System.Drawing.SystemColors.Control;
-            this.tab_description.FlatAppearance.BorderColor = System.Drawing.Color.Black;
-            resources.ApplyResources(this.tab_description, "tab_description");
-            this.tab_description.Name = "tab_description";
-            this.tab_description.UseVisualStyleBackColor = false;
-            this.tab_description.Click += new System.EventHandler(this.tab_description_Click);
-            // 
-            // tab_origin
-            // 
-            resources.ApplyResources(this.tab_origin, "tab_origin");
-            this.tab_origin.Name = "tab_origin";
-            this.tab_origin.UseVisualStyleBackColor = true;
-            this.tab_origin.Click += new System.EventHandler(this.tab_origin_Click);
-            // 
-            // tab_camera
-            // 
-            resources.ApplyResources(this.tab_camera, "tab_camera");
-            this.tab_camera.Name = "tab_camera";
-            this.tab_camera.UseVisualStyleBackColor = true;
-            this.tab_camera.Click += new System.EventHandler(this.tab_camera_Click);
-            // 
-            // tab_ap
-            // 
-            resources.ApplyResources(this.tab_ap, "tab_ap");
-            this.tab_ap.Name = "tab_ap";
-            this.tab_ap.UseVisualStyleBackColor = true;
-            this.tab_ap.Click += new System.EventHandler(this.tab_ap_Click);
-            // 
             // refreshbtn
             // 
             resources.ApplyResources(this.refreshbtn, "refreshbtn");
@@ -246,47 +153,56 @@ namespace testiä
             this.refreshbtn.UseVisualStyleBackColor = true;
             this.refreshbtn.Click += new System.EventHandler(this.refreshbtn_Click);
             // 
+            // imageAmount2
+            // 
+            resources.ApplyResources(this.imageAmount2, "imageAmount2");
+            this.imageAmount2.Name = "imageAmount2";
+            // 
+            // textBox1
+            // 
+            resources.ApplyResources(this.textBox1, "textBox1");
+            this.textBox1.Name = "textBox1";
+            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
+            // 
             // label1
             // 
             resources.ApplyResources(this.label1, "label1");
             this.label1.Name = "label1";
             // 
-            // diatimeSel
+            // label2
             // 
-            this.diatimeSel.BackColor = System.Drawing.SystemColors.Control;
-            this.diatimeSel.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            resources.ApplyResources(this.diatimeSel, "diatimeSel");
-            this.diatimeSel.Maximum = new decimal(new int[] {
-            30000,
-            0,
-            0,
-            0});
-            this.diatimeSel.Name = "diatimeSel";
-            this.diatimeSel.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.diatimeSel_KeyPress);
+            resources.ApplyResources(this.label2, "label2");
+            this.label2.Name = "label2";
             // 
-            // timer1
+            // textBox2
             // 
-            this.timer1.Tick += new System.EventHandler(this.changedia);
+            resources.ApplyResources(this.textBox2, "textBox2");
+            this.textBox2.Name = "textBox2";
+            this.textBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox2_KeyPress);
             // 
-            // imageAmount2
+            // label3
             // 
-            resources.ApplyResources(this.imageAmount2, "imageAmount2");
-            this.imageAmount2.Name = "imageAmount2";
+            resources.ApplyResources(this.label3, "label3");
+            this.label3.Name = "label3";
+            // 
+            // label4
+            // 
+            resources.ApplyResources(this.label4, "label4");
+            this.label4.Name = "label4";
             // 
             // imageMTDT
             // 
             this.AllowDrop = true;
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.imageAmount2);
-            this.Controls.Add(this.diatimeSel);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.imageAmount2);
             this.Controls.Add(this.refreshbtn);
-            this.Controls.Add(this.tab_ap);
-            this.Controls.Add(this.tab_camera);
-            this.Controls.Add(this.tab_origin);
-            this.Controls.Add(this.tab_description);
-            this.Controls.Add(this.descriptionMTDT);
             this.Controls.Add(this.TagSearch);
             this.Controls.Add(this.currentimage);
             this.Controls.Add(this.CurrentFile);
@@ -294,8 +210,6 @@ namespace testiä
             this.Controls.Add(this.ChosenFolder);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.PictureBox);
-            this.Controls.Add(this.nxtbtn);
-            this.Controls.Add(this.prevbtn);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.HelpButton = true;
             this.MaximizeBox = false;
@@ -307,17 +221,12 @@ namespace testiä
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.currentimage)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.descriptionMTDT)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.diatimeSel)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button prevbtn;
-        private System.Windows.Forms.Button nxtbtn;
         private System.Windows.Forms.PictureBox PictureBox;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripButton DirectoryBtn;
@@ -328,21 +237,16 @@ namespace testiä
         private System.Windows.Forms.TextBox CurrentFile;
         private System.Windows.Forms.NumericUpDown currentimage;
         private System.Windows.Forms.TextBox TagSearch;
-        private System.Windows.Forms.DataGridView descriptionMTDT;
-        private System.Windows.Forms.Button tab_description;
-        private System.Windows.Forms.Button tab_origin;
-        private System.Windows.Forms.Button tab_camera;
-        private System.Windows.Forms.Button tab_ap;
-        private System.Windows.Forms.DataGridViewTextBoxColumn mtdtName;
-        private System.Windows.Forms.DataGridViewTextBoxColumn mtdtData;
-        private System.Windows.Forms.DataGridViewTextBoxColumn exif;
         private System.Windows.Forms.Button refreshbtn;
         private System.Windows.Forms.ToolStripButton showpng;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.NumericUpDown diatimeSel;
-        private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.Label imageAmount2;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label4;
     }
 }
 
