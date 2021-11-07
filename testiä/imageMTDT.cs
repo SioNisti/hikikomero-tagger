@@ -7,24 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 using Directory = System.IO.Directory;
-/*
-*nää on kuulemma turhia t:vs
-*"kuulemma" on aika aliliioteltu sana tähän.  muunmuassa nää joskus vanhassa koodissa käytetyt library:t vei 300mb tilaa turhaan
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing.Drawing2D;
-using System.Text;
-using System.Threading.Tasks;
-using ExifLib;
-using MetadataExtractor.Formats.Exif;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data;
-using GroupDocs.Metadata.Common;
-using System.Runtime.InteropServices;
-using MetadataExtractor;
-using System.Linq;
-*/
 
 namespace testiä
 {
@@ -44,13 +26,6 @@ namespace testiä
         public imageMTDT()
         {
             InitializeComponent();
-            /*diatimeSel.Controls[0].Visible = false;
-            diatimeSel.Controls[1].Width = Width - 4;
-            currentimage.Controls[0].Visible = false;
-            currentimage.Controls[1].Width = Width - 4;
-            imageamount.Controls[0].Visible = false;
-            imageamount.Controls[1].Width = Width - 4;*/
-
 
             GlobalHotKey.RegisterHotKey("CTRL + N", () => nextimage()); //seuraava kuva
             GlobalHotKey.RegisterHotKey("CTRL + Right", () => nextimage());//seuraava kuva
@@ -59,9 +34,6 @@ namespace testiä
             GlobalHotKey.RegisterHotKey("CTRL + T", () => fcsTagSearch());//laittaa focusin siihen tägihaku lootaan
             GlobalHotKey.RegisterHotKey("CTRL + D", () => Kakapylytoimi());//valitse kansio
             GlobalHotKey.RegisterHotKey("CTRL + R", () => refresh());//valitsee saman kansion uudestaan ns "päivittääkkseen" tiedosto listan
-
-            quickdata form2 = new quickdata();
-            form2.ThePicture = this.PictureBox;
 
         }
         public PictureBox ThePicture
@@ -76,15 +48,6 @@ namespace testiä
         public static int intti = 0;
         int curtab = 0;
         int rowcount = 5;
-        int qdct = 0;
-
-        quickdata _d = new quickdata();
-        public static string quickdata_type;
-        public static string quickdata_name;
-        public static string quickdata_data;
-        public static bool qdon = false;
-        public bool qdused = true;
-        public static int qdrow;
 
         public static bool showpngs = false;
         //Timer _timeri = new Timer();
@@ -635,16 +598,8 @@ namespace testiä
             valittukuva2 = item.SubItems[0].Text;
 
             CurrentFile.Text = valittukuva2;
-            if (qdon)
-            {
-                curtab = qdct;
-            }
             Metat();
             ThePicture.Image = Image.FromFile(@valittukuva);
-            if (qdon)
-            {
-                quickdataX();
-            }
         }
 
         private void descriptionMTDT_CellEndEdit(object sender, DataGridViewCellEventArgs e)
@@ -656,7 +611,6 @@ namespace testiä
                 MessageBoxer.Show("Cannot edit PNG metadata.", "PNG image", MessageBoxIcon.Exclamation);
                 return;
             }
-                qdused = false;
                 descriptionMTDT.ClearSelection();
                 System.Threading.Thread.Sleep(300);
                 updatemtdt(e.RowIndex);
@@ -674,130 +628,37 @@ namespace testiä
             string celldata;
             int exiftype = 0;
 
-            if (!qdused)
-            {
-                exiftype = Int32.Parse(descriptionMTDT.Rows[x].Cells[2].Value.ToString());
-                Debug.WriteLine(x);
-            } else
-            {
-                qdused = true;
-            }
-            
+            exiftype = Int32.Parse(descriptionMTDT.Rows[x].Cells[2].Value.ToString());
+            Debug.WriteLine(x);
+
             Unohdakuva();
 
             ImageFile file;
-            if (!qdused)
-            {
-                file = ImageFile.FromFile(valittukuva);
-                qdused = false;
-            } else
-            {
-                //file = ImageFile.FromFile(quickdata.qdkuva);
-                file = ImageFile.FromFile(valittukuva);
-                qdused = true;
-                Debug.WriteLine("rwcnt "+rowcount.ToString());
-            }
+            file = ImageFile.FromFile(valittukuva);
             int rowcount2 = rowcount;
             while (rowcount2 > 0)
             {
-                if (qdused)
+                Debug.WriteLine("mittarilla voit testata");
+                rowcount2--;
+                Debug.WriteLine(x);
+                if (descriptionMTDT.Rows[x].Cells[1].Value == null)
                 {
-                    rowcount2 = 0;
-                    Debug.WriteLine("senkin sadisti");
+                    celldata = "";
+                    Debug.WriteLine("kivesneste"); //mikä helvetin mieliala pitää olla jotta laittaa debug viestiksi "kivesneste"????
                 }
                 else
                 {
-                    Debug.WriteLine("mittarilla voit testata");
-                    rowcount2--;
+                    celldata = descriptionMTDT.Rows[x].Cells[1].Value.ToString();
                 }
-                //MessageBox.Show(row.ToString());
-                if (!qdused)
-                {
-                    Debug.WriteLine(x);
-                    if (descriptionMTDT.Rows[x].Cells[1].Value == null)
-                    {
-                        celldata = "";
-                        Debug.WriteLine("kivesneste"); //mikä helvetin mieliala pitää olla jotta laittaa debug viestiksi "kivesneste"????
-                    }
-                    else
-                    {
-                        celldata = descriptionMTDT.Rows[x].Cells[1].Value.ToString();
-                    }
-                }
-                else
-                {
-                    //MessageBox.Show(quickdata.qdedited);
-                    if (quickdata.qdedited == null)
-                    {
-                        celldata = "";
-                        Debug.WriteLine("kivesneste"); //mikä helvetin mieliala pitää olla jotta laittaa debug viestiksi "kivesneste"????
-                    }
-                    else
-                    {
-                        celldata = quickdata.qdedited.ToString();
-                    }
-                }
+
                 Debug.WriteLine(celldata);
 
-                if (!qdused)
-                {
-                    exiftype = Int32.Parse(descriptionMTDT.Rows[x].Cells[2].Value.ToString());
-                }
-                else
-                {
-                    exiftype = Int32.Parse(quickdata.qdtype);
-                }
-
-                //VITTUUUU MITEN SAAN TÄN TOIMIMAaN ILMAAN KAHEKSAA SATAA IF LAUSETTA PERKELEEN C# KUN SE EI OLE PHP JOSSA TÄTÄ ONGELMAA EI OLISI PERKELE
-
-                /*string stringit = "ExifTag." + exiftype;
-                ExifLibrary.ExifTag stringit2 = "ExifTag." + exiftype;
-                //ExifLibrary.ExifTag stringit = "ExifTag."+exiftype;
-
-                file.Properties.Set(stringit2, celldata);*/
-
-                //tällästä if lause sotkua tulee kun C# on tyhmä kieli. saisin tän muunmuassa nyt just valmiiksi mutten suostu täyttää mun jo paskaa koodia if lauseilla
-                //noita perkeleitähän tulee yhteensä noin 26. pelkkä ajatus 26 if lauseesta miltein peräkkäin saa mut kääntymään satanismiin
-                /*
-                if (x == 0)
-                {
-                    file.Properties.Set(ExifTag.WindowsTitle, celldata);
-                }
-                else if (x == 1)
-                {
-                    file.Properties.Set(ExifTag.WindowsSubject, celldata);
-                }
-                else if (x == 2)
-                {
-                    file.Properties.Set(ExifTag.Rating, celldata);
-                }
-                else if (x == 3)
-                {
-                    file.Properties.Set(ExifTag.WindowsKeywords, celldata);
-                }
-                else if (x == 4)
-                {
-                    file.Properties.Set(ExifTag.WindowsComment, celldata);
-                }*/
-
-                //EI KIISSELISET MEISSELIT SENTÄÄN SE TOIMII! EIKÄ SIINÄ OLE KUIN YKSI IF LAUSE JEE BOING JIHUU
-                //ongelman ratkaisi kun olin kirjottanut "exiftag.windows" niin siinä oli tullu se teksti-boksi jossa näky joku numero minkä oletin olevan sama juttu kuin se nimi mutta numerona (yllätys)
-                //jees saatana
-
+                exiftype = Int32.Parse(descriptionMTDT.Rows[x].Cells[2].Value.ToString());
+               
                 Debug.WriteLine("KIISSELI");
-                //Debug.WriteLine(exiftype);
 
                 int kokki = 0;
-                if (!qdused)
-                {
-                    kokki = Int32.Parse(descriptionMTDT.Rows[x].Cells[2].Value.ToString());
-                    //MessageBox.Show(kokki + " a");
-                }
-                else
-                {
-                    kokki = Int32.Parse(quickdata_type);
-                    //MessageBox.Show(kokki + " b");
-                }
+                kokki = Int32.Parse(descriptionMTDT.Rows[x].Cells[2].Value.ToString());
 
                 if (kokki != exiftype)
                 { break; }
@@ -945,51 +806,9 @@ namespace testiä
                 //x++; tää rikko sen.  oli jääny yli vanhasta koodista
             }
 
-            if (!qdused)
-            {
-                Unohdakuva();
-                file.Save(valittukansio2 + "/" + valittukuva2);
-            }
-            else
-            {
-                //quickdata.qdkuva.Dispose();
-                quickdata d = new quickdata();
-                d.alzheimer();
-
-                //MessageBox.Show(valittukansio2 + "/" + valittukuva2);
-
-                //file.Save(/*quickdata.qdkansio + "/" + */quickdata.qdkuva2);
-
-                //tää ei pysty disposaan sitä pictureboxin kuvaa qd:sta käsin joka estää tän toimimisen
-
-                this.Unohdakuva();
-                PictureBox.Dispose();
-                ThePicture.Dispose();
-
-                PictureBox.Image = Image.FromFile(@"C:/Users/Bamsemums/Desktop/työt/Csharp/hikikomero/testiä/sumutorvi.png");
-                //intti = intti;
-
-                /*C:\\Users\\Bamsemums\\Desktop\\työt\\Csharp\\hikikomero\\testiä\\
-                intti = intti + quickdata.qdintti;
-                    previmage();
-                try
-                {
-                    previmage();
-                }
-                catch (System.ArgumentOutOfRangeException)
-                {
-                    MessageBoxer.Show("splat: "+intti, "vittu", MessageBoxIcon.Error);
-                }*/
-                try
-                {
-                    file.Save(valittukansio2 + "/" + valittukuva2);
-                }
-                catch (System.IO.IOException)
-                {
-                    //MessageBox.Show("Se kusinen paska ei onnistunut disposata sitä pictureboxin kuvaa prkl", "vittu", 0, MessageBoxIcon.Error);
-                    MessageBoxer.Show("Se kusinen paska ei onnistunut \"disposata\" sitä pictureboxin kuvaa prkl.  se ei vaan tiedä että se PictureBox on olemassa vaikkakin se vetää imageMTDT:n koodia jossa se PictureBox on.  vaikkei se tiedä että se on olemassa niin se ei valita että \"mikä vittu tää on\" kun sen yrittää \"disposata\".", "vittu", MessageBoxIcon.Error);
-                }
-            }/*
+            Unohdakuva();
+            file.Save(valittukansio2 + "/" + valittukuva2);
+            /*
             try
             {
                 nextimage();
@@ -1029,62 +848,6 @@ namespace testiä
         {
             curtab = 3;
             Metat();
-        }
-
-        private void descriptionMTDT_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            //miten vitaleeessa saan ton quickdata_Load() event:in käynnistettyä täältä imagemtdt:stä >:[
-            if (ModifierKeys.HasFlag(Keys.Control))
-            {
-                if (e.KeyChar == 17)
-                {
-                    //avaa quickdata ja lähetä valitun rivin tiedot
-
-                    Int32 selectedCellCount = descriptionMTDT.GetCellCount(DataGridViewElementStates.Selected);
-                    if (selectedCellCount == 3)
-                    {
-                        int o = 2;
-                        qdon = true;
-                        qdrow = descriptionMTDT.SelectedCells[o].RowIndex;
-                        qdct = curtab;
-                        quickdataX();
-                    }
-                }
-            }/*
-            if (e.KeyCode == Keys.Enter)
-            {
-                qdused = false;
-                updatemtdt();
-            }*/
-        }
-        public void quickdataX()
-        {/*
-            var file = ImageFile.FromFile(valittukuva);
-            descriptionMTDT.Rows.Add("Title", file.Properties.Get(ExifTag.WindowsTitle), 140091);
-            if (quickdata_type != null)
-            {
-                quickdata_type = descriptionMTDT.Rows[qdrow].Cells[2].Value.ToString();
-            }
-            else
-            {
-                quickdata_type = file.Properties.Get((ExifTag)exiftype);
-            }*/
-            switch (descriptionMTDT.Rows[qdrow].Cells[1].Value) //tää estää kaatumisen jos solu 2(1) on null
-            {
-                case null:
-                    quickdata_data = "";
-                    break;
-
-                default:
-                    quickdata_data = descriptionMTDT.Rows[qdrow].Cells[1].Value.ToString();
-                    break;
-            }
-            quickdata_name = descriptionMTDT.Rows[qdrow].Cells[0].Value.ToString();
-            quickdata_type = descriptionMTDT.Rows[qdrow].Cells[2].Value.ToString();
-            Debug.WriteLine("sr: " + qdrow.ToString() + "\n" + "qdt: " + quickdata_type + "\n" + "qdn: " + quickdata_name);
-
-            _d.Show();
-            _d.getdata();
         }
         private void start_DragEnter(object sender, DragEventArgs e)
         {
@@ -1242,6 +1005,11 @@ namespace testiä
                 nextimage();
             }
             else { return; }
+        }
+
+        private void PictureBox_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -201,30 +201,6 @@
   <metadata name="toolStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <data name="toolStrip1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>0, 0</value>
-  </data>
-  <data name="toolStrip1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1404, 25</value>
-  </data>
-  <data name="toolStrip1.TabIndex" type="System.Int32, mscorlib">
-    <value>3</value>
-  </data>
-  <data name="toolStrip1.Text" xml:space="preserve">
-    <value>toolStrip1</value>
-  </data>
-  <data name="&gt;&gt;toolStrip1.Name" xml:space="preserve">
-    <value>toolStrip1</value>
-  </data>
-  <data name="&gt;&gt;toolStrip1.Type" xml:space="preserve">
-    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="&gt;&gt;toolStrip1.Parent" xml:space="preserve">
-    <value>$this</value>
-  </data>
-  <data name="&gt;&gt;toolStrip1.ZOrder" xml:space="preserve">
-    <value>14</value>
-  </data>
   <data name="DirectoryBtn.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -279,6 +255,30 @@
   <data name="showpng.ToolTipText" xml:space="preserve">
     <value>Note that you can't edit metadata for PNGs</value>
   </data>
+  <data name="toolStrip1.Location" type="System.Drawing.Point, System.Drawing">
+    <value>0, 0</value>
+  </data>
+  <data name="toolStrip1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>1404, 25</value>
+  </data>
+  <data name="toolStrip1.TabIndex" type="System.Int32, mscorlib">
+    <value>3</value>
+  </data>
+  <data name="toolStrip1.Text" xml:space="preserve">
+    <value>toolStrip1</value>
+  </data>
+  <data name="&gt;&gt;toolStrip1.Name" xml:space="preserve">
+    <value>toolStrip1</value>
+  </data>
+  <data name="&gt;&gt;toolStrip1.Type" xml:space="preserve">
+    <value>System.Windows.Forms.ToolStrip, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="&gt;&gt;toolStrip1.Parent" xml:space="preserve">
+    <value>$this</value>
+  </data>
+  <data name="&gt;&gt;toolStrip1.ZOrder" xml:space="preserve">
+    <value>14</value>
+  </data>
   <metadata name="folderBrowserDialog1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>139, 15</value>
   </metadata>
@@ -306,6 +306,12 @@
   <data name="&gt;&gt;ChosenFolder.ZOrder" xml:space="preserve">
     <value>13</value>
   </data>
+  <data name="columnHeader1.Text" xml:space="preserve">
+    <value>File name</value>
+  </data>
+  <data name="columnHeader1.Width" type="System.Int32, mscorlib">
+    <value>287</value>
+  </data>
   <data name="FileBox.Location" type="System.Drawing.Point, System.Drawing">
     <value>1074, 107</value>
   </data>
@@ -326,12 +332,6 @@
   </data>
   <data name="&gt;&gt;FileBox.ZOrder" xml:space="preserve">
     <value>12</value>
-  </data>
-  <data name="columnHeader1.Text" xml:space="preserve">
-    <value>File name</value>
-  </data>
-  <data name="columnHeader1.Width" type="System.Int32, mscorlib">
-    <value>287</value>
   </data>
   <data name="CurrentFile.Location" type="System.Drawing.Point, System.Drawing">
     <value>1074, 53</value>
@@ -408,12 +408,27 @@
   <metadata name="mtdtName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="mtdtName.HeaderText" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="mtdtName.Width" type="System.Int32, mscorlib">
+    <value>41</value>
+  </data>
   <metadata name="mtdtData.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="mtdtData.HeaderText" xml:space="preserve">
+    <value>Data</value>
+  </data>
   <metadata name="exif.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <data name="exif.HeaderText" xml:space="preserve">
+    <value>exif</value>
+  </data>
+  <data name="exif.Visible" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="descriptionMTDT.Location" type="System.Drawing.Point, System.Drawing">
     <value>1073, 380</value>
   </data>
@@ -437,30 +452,6 @@
   </data>
   <data name="&gt;&gt;descriptionMTDT.ZOrder" xml:space="preserve">
     <value>8</value>
-  </data>
-  <metadata name="mtdtName.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="mtdtName.HeaderText" xml:space="preserve">
-    <value>Name</value>
-  </data>
-  <data name="mtdtName.Width" type="System.Int32, mscorlib">
-    <value>41</value>
-  </data>
-  <metadata name="mtdtData.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="mtdtData.HeaderText" xml:space="preserve">
-    <value>Data</value>
-  </data>
-  <metadata name="exif.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
-  </metadata>
-  <data name="exif.HeaderText" xml:space="preserve">
-    <value>exif</value>
-  </data>
-  <data name="exif.Visible" type="System.Boolean, mscorlib">
-    <value>False</value>
   </data>
   <data name="tab_description.FlatStyle" type="System.Windows.Forms.FlatStyle, System.Windows.Forms">
     <value>Flat</value>

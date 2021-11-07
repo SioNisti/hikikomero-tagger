@@ -85,6 +85,7 @@ namespace testiä
             resources.ApplyResources(this.PictureBox, "PictureBox");
             this.PictureBox.Name = "PictureBox";
             this.PictureBox.TabStop = false;
+            this.PictureBox.Click += new System.EventHandler(this.PictureBox_Click);
             // 
             // toolStrip1
             // 
@@ -186,7 +187,6 @@ namespace testiä
             this.descriptionMTDT.Name = "descriptionMTDT";
             this.descriptionMTDT.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.descriptionMTDT_CellEndEdit);
             this.descriptionMTDT.CellLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.descriptionMTDT_CellLeave);
-            this.descriptionMTDT.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.descriptionMTDT_KeyPress);
             // 
             // mtdtName
             // 
