@@ -543,12 +543,29 @@ namespace testiä
         }
         public void QuickArtist()
         {
+            if (!valittukuva2.EndsWith(".jpg"))
+            {
+                MessageBoxer.Show("Image isn't a .jpg file", "Wrong file type", MessageBoxIcon.Exclamation);
+                return;
+            }
             var file = ImageFile.FromFile(valittukuva);
             string[] kahvi = valittukuva2.Split('-');
             var artist = kahvi[0];
             Unohdakuva();
             file.Properties.Set(ExifTag.Artist, artist);
-            file.Save(valittukansio2 + "/" + valittukuva2);
+            Unohdakuva();
+
+            try
+            {
+                Unohdakuva();
+                file.Save(valittukansio2 + "/" + valittukuva2);
+            }
+            catch (System.IO.IOException)
+            {
+                Unohdakuva();
+                MessageBoxer.Show("Image is in use apparently.  try again", "why", MessageBoxIcon.Error);
+                Unohdakuva();
+            }
 
             ThePicture.Image = Image.FromFile(@valittukuva);
             if (file.Properties.Get(ExifTag.WindowsKeywords) != null)
@@ -623,6 +640,11 @@ namespace testiä
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
+                if (!valittukuva2.EndsWith(".jpg"))
+                {
+                    MessageBoxer.Show("Image isn't a .jpg file", "Wrong file type", MessageBoxIcon.Exclamation);
+                    return;
+                }
                 Unohdakuva();
                 string tags = textBox1.Text;
 
@@ -662,7 +684,17 @@ namespace testiä
                 try
                 {
                     Unohdakuva();
-                    file.Save(valittukansio2 + "/" + valittukuva2);
+                    try
+                    {
+                        Unohdakuva();
+                        file.Save(valittukansio2 + "/" + valittukuva2);
+                    }
+                    catch (System.IO.IOException)
+                    {
+                        Unohdakuva();
+                        MessageBoxer.Show("Image is in use apparently.  try again", "why", MessageBoxIcon.Error);
+                        Unohdakuva();
+                    }
                 }
                 catch (System.UnauthorizedAccessException)
                 {
@@ -680,6 +712,11 @@ namespace testiä
         {
             if (e.KeyChar == (char)Keys.Enter)
             {
+                if (!valittukuva2.EndsWith(".jpg"))
+                {
+                    MessageBoxer.Show("Image isn't a .jpg file", "Wrong file type", MessageBoxIcon.Exclamation);
+                    return;
+                }
                 Unohdakuva();
                 if (textBox2.Text == null)
                 {
@@ -694,7 +731,17 @@ namespace testiä
                 try
                 {
                     Unohdakuva();
-                    file.Save(valittukansio2 + "/" + valittukuva2);
+                    try
+                    {
+                        Unohdakuva();
+                        file.Save(valittukansio2 + "/" + valittukuva2);
+                    }
+                    catch (System.IO.IOException)
+                    {
+                        Unohdakuva();
+                        MessageBoxer.Show("Image is in use apparently.  try again", "why", MessageBoxIcon.Error);
+                        Unohdakuva();
+                    }
                 }
                 catch (System.UnauthorizedAccessException)
                 {
