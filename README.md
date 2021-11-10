@@ -7,8 +7,6 @@ here are the hotkeys it uses for navigation and such
 
 (All require you to press CTRL + Key showed)
 
-("CTRL + N", () => nextimage()); //seuraava kuva
-
 N => next image
 
 B => previous image
